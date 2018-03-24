@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright 2018 Daniel Monedero-Tortola
+
+This file is part of Saver.
+
+Saver is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Saver is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Saver.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/history_table"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:shrinkColumns="*"
+    android:stretchColumns="*">
+    <TableRow
+        android:id="@+id/tableRowLabel"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/product_name_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_span="3"
+            android:text="Product Name"></TextView>
+    </TableRow>
+    <TableRow
+        android:id="@+id/tableRowHeader"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <TextView
+            android:id="@+id/price_per_weight_header"
+            android:textStyle="bold"></TextView>
+        <TextView
+            android:id="@+id/TextViewHeaderPlace"
+            android:text="@string/place"
+            android:textStyle="bold"></TextView>
+        <TextView
+            android:id="@+id/TextViewDate"
+            android:text="@string/date"
+            android:textStyle="bold"></TextView>
+    </TableRow>
+</TableLayout>

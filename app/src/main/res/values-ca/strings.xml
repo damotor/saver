@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Saver</string>
+    <string name="price">Preu</string>
+    <string name="price_per_kilogram">Preu per quilogram: </string>
+    <string name="price_per_pound">Preu per lliura: </string>
+    <string name="price_per_kilogram_hint">Preu per quilogram</string>
+    <string name="price_per_pound_hint">Preu per lliura</string>
+    <string name="product">Producte</string>
+    <string name="search_product">Cercar producte</string>
+    <string name="information">Información</string>
+    <string name="calculate">Calcular</string>
+    <string name="add_product">Afegir</string>
+    <string name="update_product">Actualitzar</string>
+    <string name="remove_product">Eliminar</string>
+    <string name="place">Lloc</string>
+    <string name="save">Guardar</string>
+    <string name="clear_all">Esborrar</string>
+    <string name="weight_unit">Unitat de pes</string>
+    <string name="ounces">Unces</string>
+    <string name="pounds">Lliures</string>
+    <string name="grams">Grams</string>
+    <string name="kilograms">Quilograms</string>
+    <string name="database_path">Ruta de la base de dades</string>
+    <string name="http">http://</string>
+    <string name="delete">Esborrar</string>
+    <string name="delete_confirmation">Segur que vols esborrar aquest producte?</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="search">Cercar</string>
+    <string name="compare">Comparar</string>
+    <string name="settings">Configuració</string>
+    <string name="history">Historial</string>
+    <string name="date">Data</string>
+</resources>

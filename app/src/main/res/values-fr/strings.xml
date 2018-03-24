@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Saver</string>
+    <string name="price">Prix</string>
+    <string name="price_per_kilogram">Prix par kilogramme: </string>
+    <string name="price_per_pound">Prix par livre: </string>
+    <string name="price_per_kilogram_hint">Prix par kilogramme</string>
+    <string name="price_per_pound_hint">Prix par livre</string>
+    <string name="product">Produit</string>
+    <string name="search_product">Recherche produit</string>
+    <string name="information">Information</string>
+    <string name="calculate">Calculer</string>
+    <string name="add_product">Ajoutez</string>
+    <string name="update_product">Actualiser</string>
+    <string name="remove_product">Retirer</string>
+    <string name="place">Lieu</string>
+    <string name="save">Enregister</string>
+    <string name="clear_all">Effacer</string>
+    <string name="weight_unit">Unité de poids</string>
+    <string name="ounces">Onces</string>
+    <string name="pounds">Livres</string>
+    <string name="grams">Grammes</string>
+    <string name="kilograms">Kilogrammes</string>
+    <string name="database_path">Chemin de la base de données</string>
+    <string name="http">http://</string>
+    <string name="delete">Supprimer</string>
+    <string name="delete_confirmation">Êtes-vous sûr de vouloir supprimer ce produit?</string>
+    <string name="cancel">Annuler</string>
+    <string name="search">Rechercher</string>
+    <string name="compare">Comparer</string>
+    <string name="settings">Configuration</string>
+    <string name="history">Record</string>
+    <string name="date">Date</string>
+</resources>

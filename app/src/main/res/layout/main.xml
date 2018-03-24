@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Copyright 2018 Daniel Monedero-Tortola
+
+This file is part of Saver.
+
+Saver is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Saver is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Saver.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+	<TextView
+		android:id="@+id/search_separator"
+		android:text="@string/search"
+		style="?android:attr/listSeparatorTextViewStyle"
+		/>
+	<AutoCompleteTextView
+		android:id="@+id/autocomplete_product"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/search_separator"
+		android:singleLine="true"
+		android:inputType="text|textVisiblePassword"
+		android:imeOptions="actionDone"
+		android:hint="@string/search_product"
+		android:drawableLeft="@drawable/ic_search_black_24dp"
+		/>
+	<TextView
+		android:id="@+id/product_information_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/autocomplete_product"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		/>
+	<Button
+		android:id="@+id/update_product_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/product_information_label"
+		android:layout_alignParentRight="true"
+		android:text="@string/update_product"
+		android:drawableLeft="@drawable/ic_arrow_forward_black_24dp"
+		/>
+
+
+	<TextView
+		android:id="@+id/compare_separator"
+		android:text="@string/compare"
+		android:layout_below="@id/update_product_button"
+		style="?android:attr/listSeparatorTextViewStyle"
+		/>
+	<EditText
+		android:id="@+id/price_entry"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/compare_separator"
+		android:inputType="numberDecimal"
+		android:imeOptions="actionNext"
+		android:hint="@string/price"
+		android:drawableLeft="@drawable/ic_attach_money_black_24dp"
+		/>
+	<EditText
+		android:id="@+id/weight_entry"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/price_entry"
+		android:inputType="numberDecimal"
+		android:imeOptions="actionDone"
+		android:drawableLeft="@drawable/weight"
+		/>
+	<TextView
+		android:id="@+id/price_per_weight_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/weight_entry"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		/>
+	<Button
+		android:id="@+id/clear_all_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/price_per_weight_label"
+		android:layout_alignParentLeft="true"
+		android:text="@string/clear_all"
+		android:drawableLeft="@drawable/ic_clear_black_24dp"
+		/>
+	<Button
+		android:id="@+id/calculate_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/price_per_weight_label"
+		android:layout_toLeftOf="@+id/new_product_button"
+		android:text="@string/calculate"
+		android:drawableLeft="@drawable/ic_done_black_24dp"
+		/>
+	<Button
+		android:id="@+id/new_product_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/price_per_weight_label"
+		android:layout_alignParentRight="true"
+		android:text="@string/add_product"
+		android:drawableLeft="@drawable/ic_add_black_24dp"
+		/>
+</RelativeLayout>
