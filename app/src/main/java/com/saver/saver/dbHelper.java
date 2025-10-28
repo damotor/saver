@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Daniel Monedero-Tortola
+Copyright 2025 Daniel Monedero-Tortola
 
 This file is part of Saver.
 
@@ -20,61 +20,64 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 package com.saver.saver;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
 public class dbHelper extends SQLiteOpenHelper {
 	public static final String DBNAME = "products.db";
 	public static final int VERSION = 1;
-	File sdcard = Environment.getExternalStorageDirectory();
-	String dbfile = sdcard.getAbsolutePath() + File.separator + DBNAME;
 	SQLiteDatabase database = null;
 
 	public dbHelper(Context context) {
+		// This is the standard, correct way to use SQLiteOpenHelper.
+		// It will automatically create the database in the app's private internal storage.
+		// Path: /data/data/com.saver.saver/databases/products.db
 		super(context, DBNAME, null, VERSION);
-		try {
-			File dbFile = new File(dbfile);
-			if (dbFile.exists()) {
-				database = SQLiteDatabase.openDatabase(dbfile, null,SQLiteDatabase.NO_LOCALIZED_COLLATORS);
-			} else {
-				File dir = Environment.getExternalStorageDirectory();
-				if (dir.exists() && dir.isDirectory() && dir.canWrite()) {
-					database = SQLiteDatabase.openOrCreateDatabase(dbfile, null);
-				} else {
-					database = this.getWritableDatabase();
-				}
-			}
-		} catch (Exception E) {
-			database = this.getWritableDatabase();
-		}
 
-		Cursor cursor = database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = 'products'", null);
-		if(cursor!=null) {
-			if(cursor.getCount() == 0) {
-				onCreate(database);
-			}
-			cursor.close();
+		try {
+			// Get a writable database. This single call handles creation, opening, and upgrades.
+			database = this.getWritableDatabase();
+		} catch (Exception e) {
+			Log.e("dbHelper", "Failed to get writable database.", e);
+			// As a last resort, try to get a readable one.
+			database = this.getReadableDatabase();
 		}
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		// This method is called automatically by getWritableDatabase() only if the database doesn't exist.
+		Log.d("dbHelper", "onCreate called, creating tables.");
 		db.execSQL("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price_per_weight NUMERIC NOT NULL, place TEXT NOT NULL, url TEXT, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);");
 		db.execSQL("CREATE TABLE IF NOT EXISTS product_revisions (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price_per_weight NUMERIC NOT NULL, place TEXT NOT NULL, url TEXT, original_created_at DATETIME NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// For future schema changes
 		switch(oldVersion){
 			case 1:
-				//db.execSQL("");
+				//db.execSQL("ALTER TABLE ...");
 		}
 	}
+
+	// --- All other methods remain the same ---
+	// They will correctly operate on the 'database' object.
 
 	public Cursor getProductNames() {
 		return database.rawQuery("SELECT id, name FROM products", null);
@@ -130,12 +133,16 @@ public class dbHelper extends SQLiteOpenHelper {
 	}
 
 	public void close() {
-		database.close();
+		if (database != null && database.isOpen()) {
+			database.close();
+		}
 	}
 
 	private Integer getMaxProductId() {
 		Cursor results = database.rawQuery("SELECT id FROM products ORDER BY id DESC LIMIT 1", null);
-		results.moveToFirst();
+		if (results == null || !results.moveToFirst()) {
+			return 0; // Return a default value if no products exist
+		}
 		Integer maxId = results.getInt(0);
 		results.close();
 		return maxId;
@@ -170,5 +177,96 @@ public class dbHelper extends SQLiteOpenHelper {
 		results.close();
 
 		deleteProduct(id);
+	}
+
+	/**
+	 * Exports the app's private database to the public "Downloads" folder.
+	 * @param context The application context.
+	 * @return True if export was successful, false otherwise.
+	 */
+	public boolean exportDatabase(Context context) {
+		if (!database.isOpen()) {
+			Log.e("dbHelper", "Export failed: Database is not open.");
+			return false;
+		}
+
+		// Get the path of the app's private database file
+		File privateDbFile = new File(database.getPath());
+		if (!privateDbFile.exists()) {
+			Log.e("dbHelper", "Export failed: Private database file does not exist.");
+			return false;
+		}
+
+		ContentResolver resolver = context.getContentResolver();
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, DBNAME);
+		contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.sqlite3"); // A common MIME type for SQLite
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+        // Using MediaStore to create an entry in the Downloads folder
+		Uri collection = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+		Uri newFileUri = resolver.insert(collection, contentValues);
+
+		if (newFileUri == null) {
+			Log.e("dbHelper", "Export failed: Could not create MediaStore entry.");
+			return false;
+		}
+
+		try (InputStream in = Files.newInputStream(privateDbFile.toPath());
+             OutputStream out = resolver.openOutputStream(newFileUri)) {
+			if (out == null) {
+				Log.e("dbHelper", "Export failed: Could not open output stream for URI.");
+				return false;
+			}
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			Log.i("dbHelper", "Database exported successfully to " + newFileUri.toString());
+			return true;
+		} catch (Exception e) {
+			Log.e("dbHelper", "Export failed with exception.", e);
+			// Clean up the failed entry if possible
+			resolver.delete(newFileUri, null, null);
+			return false;
+		}
+	}
+
+	/**
+	 * Imports a database file from a given URI, replacing the current app database.
+	 * @param context The application context.
+	 * @param sourceUri The content URI of the file to import.
+	 * @return True if import was successful, false otherwise.
+	 */
+	public boolean importDatabase(Context context, Uri sourceUri) {
+		File privateDbFile = new File(context.getDatabasePath(DBNAME).getPath());
+
+		// First, close the current database connection
+		close();
+
+		try (InputStream in = context.getContentResolver().openInputStream(sourceUri);
+			 OutputStream out = new FileOutputStream(privateDbFile, false)) { // Overwrite the existing private DB
+			if (in == null) {
+				Log.e("dbHelper", "Import failed: Could not open input stream from URI.");
+				return false;
+			}
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			Log.i("dbHelper", "Database imported successfully from " + sourceUri.toString());
+
+			// Re-open the database after successful import
+			database = SQLiteDatabase.openDatabase(privateDbFile.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
+
+			return true;
+		} catch (Exception e) {
+			Log.e("dbHelper", "Import failed with exception.", e);
+			// If import fails, try to restore the original connection
+			database = this.getWritableDatabase();
+			return false;
+		}
 	}
 }

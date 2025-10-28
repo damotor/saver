@@ -20,23 +20,23 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.saver.saver"
     android:versionCode="4"
     android:versionName="4" >
 
-    <uses-sdk android:minSdkVersion="14" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".SaverActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:exported="true"
+            android:theme="@style/Theme.Saver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,9 +45,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         </activity>
         <activity
             android:name=".AddUpdateProductActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:exported="true"
+            android:theme="@style/Theme.Saver">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
 
@@ -56,9 +55,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:exported="true"
+            android:theme="@style/Theme.Saver">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
 
@@ -67,9 +65,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         </activity>
         <activity
             android:name=".HistoryActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:exported="true"
+            android:theme="@style/Theme.Saver">
             <intent-filter>
                 <action android:name="android.intent.action.HISTORY" />
 

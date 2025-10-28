@@ -33,7 +33,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/search_separator"
-		android:singleLine="true"
+        android:drawableStart="@drawable/ic_search_black_24dp"
+        android:singleLine="true"
 		android:inputType="text|textVisiblePassword"
 		android:imeOptions="actionDone"
 		android:hint="@string/search_product"
@@ -50,9 +51,11 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:id="@+id/update_product_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/product_information_label"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/product_information_label"
 		android:layout_alignParentRight="true"
-		android:text="@string/update_product"
+        android:drawableStart="@drawable/ic_arrow_forward_black_24dp"
+        android:text="@string/update_product"
 		android:drawableLeft="@drawable/ic_arrow_forward_black_24dp"
 		/>
 
@@ -68,7 +71,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/compare_separator"
-		android:inputType="numberDecimal"
+        android:drawableStart="@drawable/ic_attach_money_black_24dp"
+        android:inputType="numberDecimal"
 		android:imeOptions="actionNext"
 		android:hint="@string/price"
 		android:drawableLeft="@drawable/ic_attach_money_black_24dp"
@@ -78,7 +82,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/price_entry"
-		android:inputType="numberDecimal"
+        android:drawableStart="@drawable/weight"
+        android:inputType="numberDecimal"
 		android:imeOptions="actionDone"
 		android:drawableLeft="@drawable/weight"
 		/>
@@ -93,9 +98,11 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:id="@+id/clear_all_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/price_per_weight_label"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/price_per_weight_label"
 		android:layout_alignParentLeft="true"
-		android:text="@string/clear_all"
+        android:drawableStart="@drawable/ic_clear_black_24dp"
+        android:text="@string/clear_all"
 		android:drawableLeft="@drawable/ic_clear_black_24dp"
 		/>
 	<Button
@@ -104,16 +111,37 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/price_per_weight_label"
 		android:layout_toLeftOf="@+id/new_product_button"
-		android:text="@string/calculate"
+        android:layout_toStartOf="@+id/new_product_button"
+        android:drawableStart="@drawable/ic_done_black_24dp"
+        android:text="@string/calculate"
 		android:drawableLeft="@drawable/ic_done_black_24dp"
 		/>
 	<Button
 		android:id="@+id/new_product_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/price_per_weight_label"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/price_per_weight_label"
 		android:layout_alignParentRight="true"
-		android:text="@string/add_product"
+        android:drawableStart="@drawable/ic_add_black_24dp"
+        android:text="@string/add_product"
 		android:drawableLeft="@drawable/ic_add_black_24dp"
 		/>
+
+	<Button
+		android:id="@+id/btnExportDb"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:text="@string/export_db"/>
+
+	<Button
+		android:id="@+id/btnImportDb"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/import_db"/>
+
 </RelativeLayout>

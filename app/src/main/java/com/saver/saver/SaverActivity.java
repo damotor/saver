@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -47,19 +48,43 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class SaverActivity extends Activity {
+public class SaverActivity extends AppCompatActivity {
 	public static final int ADD_PRODUCT_VALUE = 0;
 	public static final int UPDATE_PRODUCT_VALUE = 1;
 	private Integer productId = null;
 	private WeightUnit weightUnit = null;
 	private boolean isPreviousActivitySettings = false;
+	private dbHelper db;
+
+	private final androidx.activity.result.ActivityResultLauncher<Intent> importDbLauncher = registerForActivityResult(
+			new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
+			result -> {
+				if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+					Uri uri = result.getData().getData();
+					if (uri != null) {
+						boolean success = db.importDatabase(this, uri);
+						if (success) {
+							Toast.makeText(this, "Database imported successfully! Please restart the app.", Toast.LENGTH_LONG).show();
+							// You might want to force a restart or reload data here
+						} else {
+							Toast.makeText(this, "Failed to import database.", Toast.LENGTH_SHORT).show();
+						}
+					}
+				}
+			});
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		db = new dbHelper(this);
 
 		// load preferences
 		loadPreferences();
@@ -156,6 +181,35 @@ public class SaverActivity extends Activity {
 			}
 		});
 
+		final Button exportButton = (Button) findViewById(R.id.btnExportDb);
+		exportButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				boolean success = db.exportDatabase(SaverActivity.this);
+				if (success) {
+					Toast.makeText(SaverActivity.this, "Database exported to Downloads folder.", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(SaverActivity.this, "Failed to export database.", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
+		final Button importButton = (Button) findViewById(R.id.btnImportDb);
+		importButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+				// You can specify the MIME type to filter files.
+				// SQLite databases don't have a standard one, so we use a generic one.
+				intent.setType("application/octet-stream");
+
+				// You could also try to filter by .db extension, though this is less reliable
+				// String[] mimetypes = {"application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"};
+				// intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+
+				importDbLauncher.launch(intent);
+			}
+		});
+
 		// text change listeners
 		// for the calculate button
 		TextWatcher priceWeightTextWatcher = new TextWatcher() {
@@ -217,6 +271,8 @@ public class SaverActivity extends Activity {
 
 		// make sure we can click links
 		productInformationLabel.setMovementMethod(LinkMovementMethod.getInstance());
+
+
 	}
 
 
@@ -380,5 +436,13 @@ public class SaverActivity extends Activity {
 		productInformationLabel.setText(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram : R.string.price_per_pound);
 		TextView pricePerWeightLabel = (TextView) findViewById(R.id.price_per_weight_label);
 		pricePerWeightLabel.setText(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram : R.string.price_per_pound);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (db != null) {
+			db.close();
+		}
 	}
 }

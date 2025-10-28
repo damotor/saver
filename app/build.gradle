@@ -1,14 +1,20 @@
-apply plugin: 'com.android.application'
+// Use the modern plugins block.
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 android {
-    compileSdkVersion 27
+    namespace 'com.saver.saver'
+    compileSdkVersion 34
     defaultConfig {
         applicationId "com.saver.saver"
-        minSdkVersion 14
-        targetSdkVersion 27
+        minSdkVersion 29
+        targetSdkVersion 33
         versionCode 4
         versionName "4.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // Use the modern AndroidX test runner
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -16,13 +22,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+    }// THIS IS THE MODERN, NON-DEPRECATED SYNTAX FOR ANDROID BUILDS
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += "-Xlint:deprecation"
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27+'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // Replace the old support library with its AndroidX equivalent
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // This BOM enforces a consistent Kotlin version across all dependencies.
+    implementation platform("org.jetbrains.kotlin:kotlin-bom:1.9.22")
+    // Declare the stdlib dependency without a version; the BOM handles it.
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    testImplementation 'junit:junit:4.13.2'
+
+    // Replace the old test libraries with their AndroidX equivalents
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
