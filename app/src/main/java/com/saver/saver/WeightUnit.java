@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Daniel Monedero-Tortola
+Copyright 2025 Daniel Monedero-Tortola
 
 This file is part of Saver.
 
@@ -19,6 +19,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.saver.saver;
 
+import androidx.annotation.NonNull;
+
 public enum WeightUnit {
     KILOGRAMS("kilograms"),
     POUNDS("pounds")
@@ -26,7 +28,7 @@ public enum WeightUnit {
 
     private final String name;
 
-    private WeightUnit(final String name) {
+    WeightUnit(final String name) {
         this.name = name;
     }
 
@@ -38,6 +40,7 @@ public enum WeightUnit {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;

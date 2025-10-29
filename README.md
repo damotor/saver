@@ -12,7 +12,7 @@ Currently working on supporting more languages and improving the quality.
 
 http://www.faltantornillos.net/
 
-Copyright 2018 Daniel Monedero-Tortola
+Copyright 2025 Daniel Monedero-Tortola
 
 This file is part of Saver.
 

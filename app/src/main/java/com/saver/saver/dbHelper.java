@@ -20,7 +20,6 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 package com.saver.saver;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,7 +32,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -41,7 +39,7 @@ import android.util.Log;
 public class dbHelper extends SQLiteOpenHelper {
 	public static final String DBNAME = "products.db";
 	public static final int VERSION = 1;
-	SQLiteDatabase database = null;
+	SQLiteDatabase database;
 
 	public dbHelper(Context context) {
 		// This is the standard, correct way to use SQLiteOpenHelper.
@@ -65,15 +63,20 @@ public class dbHelper extends SQLiteOpenHelper {
 		Log.d("dbHelper", "onCreate called, creating tables.");
 		db.execSQL("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price_per_weight NUMERIC NOT NULL, place TEXT NOT NULL, url TEXT, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);");
 		db.execSQL("CREATE TABLE IF NOT EXISTS product_revisions (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price_per_weight NUMERIC NOT NULL, place TEXT NOT NULL, url TEXT, original_created_at DATETIME NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);");
+		//db.execSQL("CREATE TABLE IF NOT EXISTS product_barcodes (id INTEGER PRIMARY KEY, barcode TEXT NOT NULL, product_id INTEGER NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// For future schema changes
-		switch(oldVersion){
+		/*switch(oldVersion){
 			case 1:
+			case 2:
+			case 3:
+			case 4:
 				//db.execSQL("ALTER TABLE ...");
-		}
+				//db.execSQL("CREATE TABLE IF NOT EXISTS product_barcodes (id INTEGER PRIMARY KEY, barcode TEXT NOT NULL, product_id INTEGER NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);");
+		}*/
 	}
 
 	// --- All other methods remain the same ---
@@ -112,7 +115,7 @@ public class dbHelper extends SQLiteOpenHelper {
 	public Integer updateProduct(int id, String name, float pricePerWeight, String place, String url) {
 		Cursor results = getProduct(id);
 		results.moveToFirst();
-		if (results.isAfterLast() == false) {
+		if (!results.isAfterLast()) {
 			String oldName = results.getString(1);
 			float oldPricePerWeight = results.getFloat(2);
 			String oldPlace = results.getString(3);
@@ -165,7 +168,7 @@ public class dbHelper extends SQLiteOpenHelper {
 	public void deleteProductButBackup(int id) {
 		Cursor results = getProduct(id);
 		results.moveToFirst();
-		if (results.isAfterLast() == false) {
+		if (!results.isAfterLast()) {
 			String oldName = results.getString(1);
 			float oldPricePerWeight = results.getFloat(2);
 			String oldPlace = results.getString(3);
@@ -223,7 +226,7 @@ public class dbHelper extends SQLiteOpenHelper {
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
-			Log.i("dbHelper", "Database exported successfully to " + newFileUri.toString());
+			Log.i("dbHelper", "Database exported successfully to " + newFileUri);
 			return true;
 		} catch (Exception e) {
 			Log.e("dbHelper", "Export failed with exception.", e);
@@ -256,7 +259,7 @@ public class dbHelper extends SQLiteOpenHelper {
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
-			Log.i("dbHelper", "Database imported successfully from " + sourceUri.toString());
+			Log.i("dbHelper", "Database imported successfully from " + sourceUri);
 
 			// Re-open the database after successful import
 			database = SQLiteDatabase.openDatabase(privateDbFile.getPath(), null, SQLiteDatabase.OPEN_READWRITE);

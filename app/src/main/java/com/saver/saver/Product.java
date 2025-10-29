@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Daniel Monedero-Tortola
+Copyright 2025 Daniel Monedero-Tortola
 
 This file is part of Saver.
 
@@ -20,6 +20,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 package com.saver.saver;
 
 import android.database.Cursor;
+
+import androidx.annotation.NonNull;
 
 public class Product {
     private int id;
@@ -50,6 +52,7 @@ public class Product {
         this.name = name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;

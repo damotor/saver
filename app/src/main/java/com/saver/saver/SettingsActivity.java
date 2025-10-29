@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Daniel Monedero-Tortola
+Copyright 2025 Daniel Monedero-Tortola
 
 This file is part of Saver.
 
@@ -22,8 +22,6 @@ package com.saver.saver;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -36,25 +34,18 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.settings);
 
         // listen for kilograms radio button
-        final Button kilogramsButton = (Button) findViewById(R.id.kilograms_radio);
-        kilogramsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                saveWeightUnitPreference(WeightUnit.KILOGRAMS);
-            }
-        });
+        final Button kilogramsButton = findViewById(R.id.kilograms_radio);
+        kilogramsButton.setOnClickListener(v -> saveWeightUnitPreference(WeightUnit.KILOGRAMS));
 
         // listen for pounds radio button
-        final Button poundsButton = (Button) findViewById(R.id.pounds_radio);
-        poundsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                saveWeightUnitPreference(WeightUnit.POUNDS);
-            }
-        });
+        final Button poundsButton = findViewById(R.id.pounds_radio);
+        poundsButton.setOnClickListener(v -> saveWeightUnitPreference(WeightUnit.POUNDS));
 
         // enable/disable radios according to the preferences
-        String weightUnit = PreferenceManager.getDefaultSharedPreferences(this).getString("weightUnit", null);
+        SharedPreferences sharedPreferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+        String weightUnit = sharedPreferences.getString("weightUnit", null);
         if (weightUnit != null) {
-            final RadioGroup weightUnitGroup = (RadioGroup) findViewById(R.id.weight_unit_group);
+            final RadioGroup weightUnitGroup = findViewById(R.id.weight_unit_group);
             if (weightUnit.equals(WeightUnit.KILOGRAMS.toString())) {
                 weightUnitGroup.check(R.id.kilograms_radio);
             } else {
@@ -64,14 +55,15 @@ public class SettingsActivity extends Activity {
 
         // set database path
         final dbHelper helper = new dbHelper(this);
-        TextView pricePerWeight = (TextView) findViewById(R.id.database_path);
+        TextView pricePerWeight = findViewById(R.id.database_path);
         pricePerWeight.setText(helper.getDatabasePath());
         helper.close();
     }
 
     private void saveWeightUnitPreference(WeightUnit weightUnit) {
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        SharedPreferences sharedPreferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("weightUnit", weightUnit.toString());
-        editor.commit();
+        editor.apply();
     }
 }

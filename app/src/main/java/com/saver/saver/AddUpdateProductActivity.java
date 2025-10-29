@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Daniel Monedero-Tortola
+Copyright 2025 Daniel Monedero-Tortola
 
 This file is part of Saver.
 
@@ -21,7 +21,6 @@ package com.saver.saver;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -54,9 +52,11 @@ public class AddUpdateProductActivity extends Activity {
 		// intent extras
 		Bundle extras = getIntent().getExtras();
 
-		String weightUnitString = extras.getString("weightUnit");
-		weightUnit = WeightUnit.fromName(weightUnitString);
-		TextView pricePerWeightEntry = (TextView) findViewById(R.id.price_per_weight_entry);
+        assert extras != null;
+        String weightUnitString = extras.getString("weightUnit");
+        assert weightUnitString != null;
+        weightUnit = WeightUnit.fromName(weightUnitString);
+		TextView pricePerWeightEntry = findViewById(R.id.price_per_weight_entry);
 		pricePerWeightEntry.setHint(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram_hint : R.string.price_per_pound_hint);
 
 		String pricePerWeightString = extras.getString("pricePerWeight");
@@ -69,7 +69,7 @@ public class AddUpdateProductActivity extends Activity {
 			final dbHelper helper = new dbHelper(this);
 			Cursor results = helper.getProduct(productId);
 			results.moveToFirst();
-			if (results.isAfterLast() == false) {
+			if (!results.isAfterLast()) {
 				((EditText) findViewById(R.id.product_entry)).setText(results.getString(1));
 				((EditText) findViewById(R.id.price_per_weight_entry)).setText(results.getString(2));
 				((AutoCompleteTextView) findViewById(R.id.place_entry_autocomplete)).setText(results.getString(3));
@@ -80,58 +80,46 @@ public class AddUpdateProductActivity extends Activity {
 		}
 
 		addOrUpdate = extras.getString("addOrUpdate");
-		final Button deleteButton = (Button) findViewById(R.id.delete_button);
+		final Button deleteButton = findViewById(R.id.delete_button);
 		if (addOrUpdate.equals("add")) {
 			deleteButton.setEnabled(false);
 		}
 
 		// listeners
 		// listen for the done key
-		EditText pricePerWeight = (EditText) findViewById(R.id.price_per_weight_entry);
+		EditText pricePerWeight = findViewById(R.id.price_per_weight_entry);
 		pricePerWeight.setOnEditorActionListener(
-				new EditText.OnEditorActionListener() {
-					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-						if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-							addOrUpdateProduct();
-							return true;
-						}
-						return false;
-					}
-				}
-		);
+                (v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        addOrUpdateProduct();
+                        return true;
+                    }
+                    return false;
+                }
+        );
 
-		EditText urlEntry = (EditText) findViewById(R.id.url_entry);
+		EditText urlEntry = findViewById(R.id.url_entry);
 		urlEntry.setOnEditorActionListener(
-				new EditText.OnEditorActionListener() {
-					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-						if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-							addOrUpdateProduct();
-							return true;
-						}
-						return false;
-					}
-				}
-		);
+                (v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        addOrUpdateProduct();
+                        return true;
+                    }
+                    return false;
+                }
+        );
 
 		// listen for the done button
-		final Button doneButton = (Button) findViewById(R.id.done_button);
-		doneButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				addOrUpdateProduct();
-			}
-		});
+		final Button doneButton = findViewById(R.id.done_button);
+		doneButton.setOnClickListener(v -> addOrUpdateProduct());
 
 		// listen for the delete button
-		deleteButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				confirmDelete();
-			}
-		});
+		deleteButton.setOnClickListener(v -> confirmDelete());
 
 		// text change listeners
-		final AutoCompleteTextView place = ((AutoCompleteTextView) findViewById(R.id.place_entry_autocomplete));
-		final EditText productName = ((EditText) findViewById(R.id.product_entry));
-		final EditText pricePerWeightStr = ((EditText) findViewById(R.id.price_per_weight_entry));
+		final AutoCompleteTextView place = findViewById(R.id.place_entry_autocomplete);
+		final EditText productName = findViewById(R.id.product_entry);
+		final EditText pricePerWeightStr = findViewById(R.id.price_per_weight_entry);
 
 		TextWatcher textWatcher = new TextWatcher() {
 			public void afterTextChanged(Editable arg0) {
@@ -141,13 +129,9 @@ public class AddUpdateProductActivity extends Activity {
 			}
 
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (((place.getText().toString() == null) || (place.getText().toString().equals(""))) ||
-					((productName.getText().toString() == null) || (productName.getText().toString().equals(""))) ||
-				((pricePerWeightStr.getText().toString() == null) || (pricePerWeightStr.getText().toString().equals("")))) {
-					doneButton.setEnabled(false);
-				} else {
-					doneButton.setEnabled(true);
-				}
+                doneButton.setEnabled(((place.getText() != null) && (!place.getText().toString().isEmpty())) &&
+                        ((productName.getText() != null) && (!productName.getText().toString().isEmpty())) &&
+                        ((pricePerWeightStr.getText() != null) && (!pricePerWeightStr.getText().toString().isEmpty())));
 			}
 		};
 		// initialize the enable state
@@ -157,28 +141,25 @@ public class AddUpdateProductActivity extends Activity {
 		productName.addTextChangedListener(textWatcher);
 		pricePerWeightStr.addTextChangedListener(textWatcher);
 
-		final Button historyButton = (Button) findViewById(R.id.history_button);
+		final Button historyButton = findViewById(R.id.history_button);
 		if (addOrUpdate.equals("add")) {
 			historyButton.setVisibility(View.GONE);
 		} else {
-			int dataPointCounter = 0;
 			String productNameString = null;
-			float currentProductPricePerWeight = 0.0f;
 			boolean showHistory = false;
 
 			final dbHelper helper = new dbHelper(this);
 
 			Cursor results = helper.getProduct(productId);
 			results.moveToFirst();
-			if (results.isAfterLast() == false) {
+			if (!results.isAfterLast()) {
 				productNameString = results.getString(1);
-				currentProductPricePerWeight = results.getFloat(2);
 			}
 			results.close();
 
 			results = helper.getProductRevisionPricesPerWeight(productNameString);
 			results.moveToFirst();
-			if (results.isAfterLast() == false) {
+			if (!results.isAfterLast()) {
 				showHistory = true;
 			}
 			results.close();
@@ -190,29 +171,27 @@ public class AddUpdateProductActivity extends Activity {
 		}
 
 		// listen for the history button
-		historyButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(AddUpdateProductActivity.this, HistoryActivity.class);
-				intent.putExtra("weightUnit", weightUnit);
-				intent.putExtra("productId", productId);
-				startActivity(intent);
-			}
-		});
+		historyButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AddUpdateProductActivity.this, HistoryActivity.class);
+            intent.putExtra("weightUnit", weightUnit);
+            intent.putExtra("productId", productId);
+            startActivity(intent);
+        });
 
 		// place autocomplete
-		ArrayList<String> places = new ArrayList<String>();
+		ArrayList<String> places = new ArrayList<>();
 		final dbHelper helper = new dbHelper(this);
 		Cursor results = helper.getPlaces();
 
 		results.moveToFirst();
-		while (results.isAfterLast() == false) {
+		while (!results.isAfterLast()) {
 			places.add(results.getString(0));
 			results.moveToNext();
 		}
 		results.close();
 		helper.close();
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_drop_down, places);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_drop_down, places);
 		place.setAdapter(adapter);
 	}
 
@@ -227,14 +206,14 @@ public class AddUpdateProductActivity extends Activity {
 
 	private void addOrUpdateProduct() {
 		// add it to the db
-		String place = "";
-		String productName = "";
-		float pricePerWeightStr = 0;
-		String url = "";
+		String place;
+		String productName;
+		float pricePerWeightStr;
+		String url;
 		final dbHelper helper = new dbHelper(this);
 		place = ((EditText) findViewById(R.id.place_entry_autocomplete)).getText().toString();
 		productName = ((EditText) findViewById(R.id.product_entry)).getText().toString();
-		pricePerWeightStr = Float.valueOf(((EditText) findViewById(R.id.price_per_weight_entry)).getText().toString());
+		pricePerWeightStr = Float.parseFloat(((EditText) findViewById(R.id.price_per_weight_entry)).getText().toString());
 		url = ((EditText) findViewById(R.id.url_entry)).getText().toString();
 
 		if (addOrUpdate.equals("add")) {
@@ -256,27 +235,20 @@ public class AddUpdateProductActivity extends Activity {
 		AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
 				.setTitle(R.string.delete)
 				.setMessage(R.string.delete_confirmation)
-				.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						final dbHelper helper = new dbHelper(AddUpdateProductActivity.this);
-						helper.deleteProductButBackup(productId);
-						helper.close();
+				.setPositiveButton(R.string.delete, (dialog, whichButton) -> {
+                    final dbHelper helper = new dbHelper(AddUpdateProductActivity.this);
+                    helper.deleteProductButBackup(productId);
+                    helper.close();
 
-						dialog.dismiss();
+                    dialog.dismiss();
 
-						// go back
-						Intent intent = new Intent();
-						intent.putExtra("productId", -1);
-						setResult(Activity.RESULT_OK, intent);
-						finish();
-					}
-
-				})
-				.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				})
+                    // go back
+                    Intent intent = new Intent();
+                    intent.putExtra("productId", -1);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                })
+				.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
 				.create();
 		myQuittingDialogBox.show();
 	}
