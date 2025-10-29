@@ -30,7 +30,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -304,7 +303,8 @@ public class SaverActivity extends AppCompatActivity {
 	}
 
 	private void loadPreferences() {
-		String weightUnitString = PreferenceManager.getDefaultSharedPreferences(this).getString("weightUnit", null);
+		SharedPreferences sharedPreferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
+		String weightUnitString = sharedPreferences.getString("weightUnit", null);
 		if (weightUnitString != null) {
 			// already saved weightUnit preference
 			if (weightUnitString.equals(WeightUnit.KILOGRAMS.toString())) {
@@ -320,7 +320,7 @@ public class SaverActivity extends AppCompatActivity {
 				weightUnit = WeightUnit.POUNDS;
 			}
 			// saved weightUnit preference
-			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putString("weightUnit", weightUnit.toString());
 			editor.apply();
 		}
@@ -368,7 +368,7 @@ public class SaverActivity extends AppCompatActivity {
 			if ((url != null) && (!url.isEmpty())) {
 				place = "<a href=\""+url+"\">"+place+"</a>";
 			}
-			productInformationLabel.setText(Html.fromHtml(pricePerString + pricePer + " @ " + place));
+			productInformationLabel.setText(Html.fromHtml(pricePerString + pricePer + " @ " + place, Html.FROM_HTML_MODE_LEGACY));
 		}
 		results.close();
 		helper.close();

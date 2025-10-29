@@ -19,6 +19,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.saver.saver;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 public class HistoryActivity extends Activity {
 
@@ -53,7 +55,7 @@ public class HistoryActivity extends Activity {
         int productId = extras.getInt("productId");
         String productName = null;
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-        SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         final dbHelper helper = new dbHelper(this);
 
         // current one
@@ -66,7 +68,7 @@ public class HistoryActivity extends Activity {
             String date = "";
 
             try {
-                date = dateFormat.format(iso8601Format.parse(results.getString(5)));
+                date = dateFormat.format(Objects.requireNonNull(iso8601Format.parse(results.getString(5))));
             } catch (ParseException e) {
                 Log.e("", "Parsing ISO8601 datetime failed", e);
             }
@@ -86,7 +88,7 @@ public class HistoryActivity extends Activity {
             String date = "";
 
             try {
-                date = dateFormat.format(iso8601Format.parse(results.getString(2)));
+                date = dateFormat.format(Objects.requireNonNull(iso8601Format.parse(results.getString(2))));
             } catch (ParseException e) {
                 Log.e("", "Parsing ISO8601 datetime failed", e);
             }
