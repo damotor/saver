@@ -8,7 +8,6 @@
     <string name="price_per_pound_hint">Preu per lliura</string>
     <string name="product">Producte</string>
     <string name="search_product">Cercar producte</string>
-    <string name="information">Información</string>
     <string name="calculate">Calcular</string>
     <string name="add_product">Afegir</string>
     <string name="update_product">Actualitzar</string>
@@ -31,4 +30,7 @@
     <string name="settings">Configuració</string>
     <string name="history">Historial</string>
     <string name="date">Data</string>
+    <string name="export_db">Exportar DB</string>
+    <string name="import_db">Importar DB</string>
+    <string name="product_name">Nom del Producte</string>
 </resources>

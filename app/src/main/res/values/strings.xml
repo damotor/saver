@@ -28,7 +28,6 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
     <string name="price_per_pound_hint">Price per pound</string>
     <string name="product">Product</string>
     <string name="search_product">Search product</string>
-    <string name="information">Information</string>
     <string name="calculate">Calculate</string>
     <string name="add_product">Add product</string>
     <string name="update_product">Update product</string>

@@ -143,7 +143,7 @@ public class dbHelper extends SQLiteOpenHelper {
 
     private Integer getMaxProductId() {
         Cursor results = database.rawQuery("SELECT id FROM products ORDER BY id DESC LIMIT 1", null);
-        if (results == null || !results.moveToFirst()) {
+        if (!results.moveToFirst()) {
             return 0; // Return a default value if no products exist
         }
         Integer maxId = results.getInt(0);

@@ -24,6 +24,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
     android:id="@+id/history_table"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="64dp"
     android:shrinkColumns="*"
     android:stretchColumns="*">
     <TableRow

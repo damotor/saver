@@ -8,7 +8,6 @@
     <string name="price_per_pound_hint">Preis pro Pfund</string>
     <string name="product">Produkt</string>
     <string name="search_product">Suche Produkt</string>
-    <string name="information">Information</string>
     <string name="calculate">Berechnen</string>
     <string name="add_product">Hinzufügen</string>
     <string name="update_product">Aktualisieren</string>
@@ -31,4 +30,7 @@
     <string name="settings">Konfiguration</string>
     <string name="history">Rekord</string>
     <string name="date">Datum</string>
+    <string name="export_db">Export DB</string>
+    <string name="import_db">Import DB</string>
+    <string name="product_name">Produktname</string>
 </resources>

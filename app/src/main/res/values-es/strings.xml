@@ -8,7 +8,6 @@
     <string name="price_per_pound_hint">Precio por libra</string>
     <string name="product">Producto</string>
     <string name="search_product">Buscar producto</string>
-    <string name="information">Información</string>
     <string name="calculate">Calcular</string>
     <string name="add_product">Añadir</string>
     <string name="update_product">Actualizar</string>
@@ -31,4 +30,7 @@
     <string name="settings">Configuración</string>
     <string name="history">Historial</string>
     <string name="date">Fecha</string>
+    <string name="export_db">Exportar BD</string>
+    <string name="import_db">Importar BD</string>
+    <string name="product_name">Nombre del Producto</string>
 </resources>

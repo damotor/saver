@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.Saver" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Saver" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/black</item>

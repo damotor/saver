@@ -22,6 +22,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
+	android:paddingTop="16dp"
+	android:paddingBottom="64dp"
 	>
 	<TextView
 		android:id="@+id/search_separator"
@@ -129,20 +131,26 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         android:text="@string/add_product"
 
 		/>
-
-	<Button
-		android:id="@+id/btnExportDb"
-		android:layout_width="wrap_content"
+	<LinearLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:text="@string/export_db"/>
+		android:orientation="horizontal">
+		<Button
+			android:id="@+id/btnExportDb"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/export_db"/>
 
-	<Button
-		android:id="@+id/btnImportDb"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="@string/import_db"/>
+		<Space
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:layout_weight="1" />
 
+		<Button
+			android:id="@+id/btnImportDb"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/import_db"/>
+	</LinearLayout>
 </RelativeLayout>

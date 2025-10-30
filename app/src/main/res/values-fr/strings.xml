@@ -8,7 +8,6 @@
     <string name="price_per_pound_hint">Prix par livre</string>
     <string name="product">Produit</string>
     <string name="search_product">Recherche produit</string>
-    <string name="information">Information</string>
     <string name="calculate">Calculer</string>
     <string name="add_product">Ajoutez</string>
     <string name="update_product">Actualiser</string>
@@ -31,4 +30,7 @@
     <string name="settings">Configuration</string>
     <string name="history">Record</string>
     <string name="date">Date</string>
+    <string name="import_db">Importer DB</string>
+    <string name="product_name">Nom du Produit</string>
+    <string name="export_db">Exporter DB</string>
 </resources>
