@@ -45,6 +45,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_height="wrap_content"
 			android:inputType="text"
 			android:imeOptions="actionDone"
+			android:minHeight="48dp"
+			android:hint="@string/search_product"
 			android:singleLine="true" />
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -56,7 +58,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_below="@id/autocomplete_product_layout"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 	/>
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/update_product_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -85,6 +87,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:inputType="numberDecimal"
+			android:minHeight="48dp"
 			android:imeOptions="actionNext"/>
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -102,6 +105,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:inputType="numberDecimal"
+			android:minHeight="48dp"
 			android:imeOptions="actionDone" />
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -113,7 +117,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_below="@id/weight_entry_layout"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		/>
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/clear_all_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -123,7 +127,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		app:icon="@drawable/ic_clear_black_24dp"
 		style="@style/Widget.MaterialComponents.Button.Icon"
 		/>
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/calculate_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -136,7 +140,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 	<Space
 	android:layout_width="16dp"
 	android:layout_height="0dp"/>
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/new_product_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -151,7 +155,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:orientation="horizontal">
-		<Button
+		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btnImportDb"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -162,7 +166,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:layout_weight="1" />
-		<Button
+		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btnExportDb"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

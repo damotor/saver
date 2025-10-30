@@ -48,11 +48,13 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/kilograms"
+			android:minHeight="48dp"
 			android:onClick="onRadioButtonClicked"/>
 		<RadioButton android:id="@+id/pounds_radio"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/pounds"
+			android:minHeight="48dp"
 			android:onClick="onRadioButtonClicked"/>
 	</RadioGroup>
 

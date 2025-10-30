@@ -45,6 +45,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:autofillHints="name"
 			android:imeOptions="actionNext"
 			android:inputType="textCapWords"
+			android:minHeight="48dp"
+			android:hint="@string/product"
 			android:singleLine="true" />
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -65,6 +67,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:inputType="text"
 			android:singleLine="true"
 			android:imeOptions="actionNext"
+			android:minHeight="48dp"
 			android:hint="@string/place"/>
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -83,6 +86,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_height="wrap_content"
 			android:inputType="numberDecimal"
 			android:imeOptions="actionDone"
+			android:minHeight="48dp"
+			android:hint="@string/price_per_pound_hint"
 			android:autofillHints="price" />
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -101,6 +106,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:autofillHints="url"
 			android:hint="@string/url"
 			android:imeOptions="actionDone"
+			android:minHeight="48dp"
 			android:inputType="textUri" />
 
 	</com.google.android.material.textfield.TextInputLayout>
