@@ -35,11 +35,11 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/weight_unit"/>
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/weight_unit_label"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:orientation="horizontal"
         android:id="@+id/weight_unit_group">
         <RadioButton android:id="@+id/kilograms_radio"
@@ -59,7 +59,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/weight_unit_group"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/database_path" />
 
@@ -68,7 +68,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/database_path_label"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/database_path" />
 </RelativeLayout>

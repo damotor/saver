@@ -31,30 +31,34 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center_horizontal">
+
         <TextView
             android:id="@+id/product_name_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:gravity="center"
             android:layout_span="3"
-            android:text="Product Name"></TextView>
+            android:text="@string/product_name" />
     </TableRow>
     <TableRow
         android:id="@+id/tableRowHeader"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
+
         <TextView
             android:id="@+id/price_per_weight_header"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/TextViewHeaderPlace"
             android:text="@string/place"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/TextViewDate"
             android:text="@string/date"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold" />
     </TableRow>
 </TableLayout>
