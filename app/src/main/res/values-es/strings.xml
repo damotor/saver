@@ -33,4 +33,6 @@
     <string name="export_db">Exportar BD</string>
     <string name="import_db">Importar BD</string>
     <string name="product_name">Nombre del Producto</string>
+    <string name="weight">Peso</string>
+    <string name="url">URL</string>
 </resources>

@@ -53,4 +53,6 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
     <string name="export_db">Export DB</string>
     <string name="import_db">Import DB</string>
     <string name="product_name">Product Name</string>
+    <string name="weight">Weight</string>
+    <string name="url">URL</string>
 </resources>

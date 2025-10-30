@@ -33,4 +33,6 @@
     <string name="export_db">Exportar DB</string>
     <string name="import_db">Importar DB</string>
     <string name="product_name">Nom del Producte</string>
+    <string name="weight">Pes</string>
+    <string name="url">URL</string>
 </resources>

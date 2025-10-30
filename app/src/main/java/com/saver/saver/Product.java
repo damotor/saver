@@ -24,33 +24,33 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 
 public class Product {
-    private int id;
-    private String name;
+	private int id;
+	private String name;
 
-    static Product fromCursor(Cursor cursor) {
-        Product product = new Product();
+	static Product fromCursor(Cursor cursor) {
+		Product product = new Product();
 
-        product.setId(cursor.getInt(0));
-        product.setName(cursor.getString(1));
+		product.setId(cursor.getInt(0));
+		product.setName(cursor.getString(1));
 
-        return product;
-    }
+		return product;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @NonNull
-    @Override
-    public String toString() {
-        return name;
-    }
+	@NonNull
+	@Override
+	public String toString() {
+		return name;
+	}
 }

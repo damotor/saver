@@ -36,91 +36,91 @@ import java.util.Objects;
 
 public class HistoryActivity extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.product_history);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.product_history);
 
-        // intent extras
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            return;
-        }
-        WeightUnit weightUnit = (WeightUnit) extras.get("weightUnit");
-        if (weightUnit != null) {
-            TextView pricePerWeightHeader = findViewById(R.id.price_per_weight_header);
-            pricePerWeightHeader.setText(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram_hint : R.string.price_per_pound_hint);
-        }
+		// intent extras
+		Bundle extras = getIntent().getExtras();
+		if (extras == null) {
+			return;
+		}
+		WeightUnit weightUnit = (WeightUnit) extras.get("weightUnit");
+		if (weightUnit != null) {
+			TextView pricePerWeightHeader = findViewById(R.id.price_per_weight_header);
+			pricePerWeightHeader.setText(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram_hint : R.string.price_per_pound_hint);
+		}
 
-        int productId = extras.getInt("productId");
-        String productName = null;
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final dbHelper helper = new dbHelper(this);
+		int productId = extras.getInt("productId");
+		String productName = null;
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+		@SuppressLint("SimpleDateFormat") SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		final dbHelper helper = new dbHelper(this);
 
-        // current one
-        Cursor results = helper.getProduct(productId);
-        results.moveToFirst();
-        if (!results.isAfterLast()) {
-            productName = results.getString(1);
-            String pricePerWeight = results.getString(2);
-            String place = results.getString(3);
-            String date = "";
+		// current one
+		Cursor results = helper.getProduct(productId);
+		results.moveToFirst();
+		if (!results.isAfterLast()) {
+			productName = results.getString(1);
+			String pricePerWeight = results.getString(2);
+			String place = results.getString(3);
+			String date = "";
 
-            try {
-                date = dateFormat.format(Objects.requireNonNull(iso8601Format.parse(results.getString(5))));
-            } catch (ParseException e) {
-                Log.e("", "Parsing ISO8601 datetime failed", e);
-            }
+			try {
+				date = dateFormat.format(Objects.requireNonNull(iso8601Format.parse(results.getString(5))));
+			} catch (ParseException e) {
+				Log.e("", "Parsing ISO8601 datetime failed", e);
+			}
 
-            TextView productNameTitle = findViewById(R.id.product_name_title);
-            productNameTitle.setText(productName);
-            addRow(pricePerWeight, place, date);
-        }
-        results.close();
+			TextView productNameTitle = findViewById(R.id.product_name_title);
+			productNameTitle.setText(productName);
+			addRow(pricePerWeight, place, date);
+		}
+		results.close();
 
-        // all the other
-        results = helper.getProductHistory(productName);
-        results.moveToFirst();
-        while (!results.isAfterLast()) {
-            String pricePerWeight = results.getString(0);
-            String place = results.getString(1);
-            String date = "";
+		// all the other
+		results = helper.getProductHistory(productName);
+		results.moveToFirst();
+		while (!results.isAfterLast()) {
+			String pricePerWeight = results.getString(0);
+			String place = results.getString(1);
+			String date = "";
 
-            try {
-                date = dateFormat.format(Objects.requireNonNull(iso8601Format.parse(results.getString(2))));
-            } catch (ParseException e) {
-                Log.e("", "Parsing ISO8601 datetime failed", e);
-            }
+			try {
+				date = dateFormat.format(Objects.requireNonNull(iso8601Format.parse(results.getString(2))));
+			} catch (ParseException e) {
+				Log.e("", "Parsing ISO8601 datetime failed", e);
+			}
 
 
-            addRow(pricePerWeight, place, date);
-            results.moveToNext();
-        }
+			addRow(pricePerWeight, place, date);
+			results.moveToNext();
+		}
 
-        results.close();
-        helper.close();
-    }
+		results.close();
+		helper.close();
+	}
 
-    private void addRow(String pricePerWeight, String place, String date) {
-        TableLayout ll = findViewById(R.id.history_table);
+	private void addRow(String pricePerWeight, String place, String date) {
+		TableLayout ll = findViewById(R.id.history_table);
 
-        TableRow row= new TableRow(this);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-        row.setLayoutParams(layoutParams);
+		TableRow row= new TableRow(this);
+		TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+		row.setLayoutParams(layoutParams);
 
-        TextView pricePerWeightTextView = new TextView(this);
-        pricePerWeightTextView.setText(pricePerWeight);
-        row.addView(pricePerWeightTextView);
+		TextView pricePerWeightTextView = new TextView(this);
+		pricePerWeightTextView.setText(pricePerWeight);
+		row.addView(pricePerWeightTextView);
 
-        TextView placeTextView = new TextView(this);
-        placeTextView.setText(place);
-        row.addView(placeTextView);
+		TextView placeTextView = new TextView(this);
+		placeTextView.setText(place);
+		row.addView(placeTextView);
 
-        TextView dateTextView = new TextView(this);
-        dateTextView.setText(date);
-        row.addView(dateTextView);
+		TextView dateTextView = new TextView(this);
+		dateTextView.setText(date);
+		row.addView(dateTextView);
 
-        ll.addView(row);
-    }
+		ll.addView(row);
+	}
 }

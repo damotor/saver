@@ -24,112 +24,127 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 	android:layout_height="fill_parent"
 	android:paddingTop="16dp"
 	android:paddingBottom="64dp"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	>
 	<TextView
 		android:id="@+id/search_separator"
 		android:text="@string/search"
 		style="?android:attr/listSeparatorTextViewStyle"
 		/>
-	<AutoCompleteTextView
-		android:id="@+id/autocomplete_product"
-		android:layout_width="fill_parent"
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/autocomplete_product_layout"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/search_separator"
-        android:drawableStart="@drawable/ic_search_black_24dp"
-        android:singleLine="true"
-		android:inputType="text|textVisiblePassword"
-		android:imeOptions="actionDone"
 		android:hint="@string/search_product"
+		app:startIconDrawable="@drawable/ic_search_black_24dp">
 
-		/>
+		<AutoCompleteTextView
+			android:id="@+id/autocomplete_product"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="text"
+			android:imeOptions="actionDone"
+			android:singleLine="true" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
 	<TextView
 		android:id="@+id/product_information_label"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/autocomplete_product"
+		android:layout_below="@id/autocomplete_product_layout"
 		android:textAppearance="?android:attr/textAppearanceMedium"
-		/>
+	/>
 	<Button
 		android:id="@+id/update_product_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/product_information_label"
-
-        android:drawableStart="@drawable/ic_arrow_forward_black_24dp"
-        android:text="@string/update_product"
-
+		android:layout_alignParentEnd="true"
+		android:layout_below="@id/product_information_label"
+		android:text="@string/update_product"
+		app:icon="@drawable/ic_arrow_forward_black_24dp"
+		style="@style/Widget.MaterialComponents.Button.Icon"
 		/>
-
-
 	<TextView
 		android:id="@+id/compare_separator"
 		android:text="@string/compare"
 		android:layout_below="@id/update_product_button"
 		style="?android:attr/listSeparatorTextViewStyle"
 		/>
-	<EditText
-		android:id="@+id/price_entry"
-		android:layout_width="fill_parent"
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/price_entry_layout"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/compare_separator"
-        android:autofillHints=""
-        android:drawableStart="@drawable/ic_attach_money_black_24dp"
-        android:inputType="numberDecimal"
-		android:imeOptions="actionNext"
 		android:hint="@string/price"
+		app:startIconDrawable="@drawable/ic_attach_money_black_24dp">
 
-		/>
-	<EditText
-		android:id="@+id/weight_entry"
-		android:layout_width="fill_parent"
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/price_entry"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="numberDecimal"
+			android:imeOptions="actionNext"/>
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/weight_entry_layout"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/price_entry"
-        android:autofillHints=""
-        android:drawableStart="@drawable/weight"
-        android:inputType="numberDecimal"
-		android:imeOptions="actionDone"
+		android:layout_below="@id/price_entry_layout"
+		android:hint="@string/ounces"
+		app:startIconDrawable="@drawable/weight">
 
-		/>
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/weight_entry"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:inputType="numberDecimal"
+			android:imeOptions="actionDone" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
 	<TextView
 		android:id="@+id/price_per_weight_label"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/weight_entry"
+		android:layout_below="@id/weight_entry_layout"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		/>
 	<Button
 		android:id="@+id/clear_all_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/price_per_weight_label"
-
-        android:drawableStart="@drawable/ic_clear_black_24dp"
-        android:text="@string/clear_all"
-
+		android:layout_alignParentStart="true"
+		android:layout_below="@+id/price_per_weight_label"
+		android:text="@string/clear_all"
+		app:icon="@drawable/ic_clear_black_24dp"
+		style="@style/Widget.MaterialComponents.Button.Icon"
 		/>
 	<Button
 		android:id="@+id/calculate_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/price_per_weight_label"
-
-        android:layout_toStartOf="@+id/new_product_button"
-        android:drawableStart="@drawable/ic_done_black_24dp"
-        android:text="@string/calculate"
-
+		android:layout_toStartOf="@+id/new_product_button"
+		android:text="@string/calculate"
+		app:icon="@drawable/ic_done_black_24dp"
+		style="@style/Widget.MaterialComponents.Button.Icon"
 		/>
+	<Space
+	android:layout_width="16dp"
+	android:layout_height="0dp"/>
 	<Button
 		android:id="@+id/new_product_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/price_per_weight_label"
-
-        android:drawableStart="@drawable/ic_add_black_24dp"
-        android:text="@string/add_product"
-
+		android:layout_alignParentEnd="true"
+		android:layout_below="@+id/price_per_weight_label"
+		android:text="@string/add_product"
+		app:icon="@drawable/ic_add_black_24dp"
+		style="@style/Widget.MaterialComponents.Button.Icon"
 		/>
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -137,20 +152,22 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_alignParentBottom="true"
 		android:orientation="horizontal">
 		<Button
-			android:id="@+id/btnExportDb"
+			android:id="@+id/btnImportDb"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/export_db"/>
-
+			android:text="@string/import_db"
+			app:icon="@drawable/ic_arrow_forward_black_24dp"
+			style="@style/Widget.MaterialComponents.Button.Icon"/>
 		<Space
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:layout_weight="1" />
-
 		<Button
-			android:id="@+id/btnImportDb"
+			android:id="@+id/btnExportDb"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/import_db"/>
+			android:text="@string/export_db"
+			app:icon="@drawable/ic_arrow_forward_black_24dp"
+			style="@style/Widget.MaterialComponents.Button.Icon"/>
 	</LinearLayout>
 </RelativeLayout>

@@ -22,27 +22,27 @@ package com.saver.saver;
 import androidx.annotation.NonNull;
 
 public enum WeightUnit {
-    KILOGRAMS("kilograms"),
-    POUNDS("pounds")
-    ;
+	KILOGRAMS("kilograms"),
+	POUNDS("pounds")
+	;
 
-    private final String name;
+	private final String name;
 
-    WeightUnit(final String name) {
-        this.name = name;
-    }
+	WeightUnit(final String name) {
+		this.name = name;
+	}
 
-    public static WeightUnit fromName(String name) {
-        if (name.equals(KILOGRAMS.toString())) {
-            return KILOGRAMS;
-        } else {
-            return POUNDS;
-        }
-    }
+	public static WeightUnit fromName(String name) {
+		if (name.equals(KILOGRAMS.toString())) {
+			return KILOGRAMS;
+		} else {
+			return POUNDS;
+		}
+	}
 
-    @NonNull
-    @Override
-    public String toString() {
-        return name;
-    }
+	@NonNull
+	@Override
+	public String toString() {
+		return name;
+	}
 }

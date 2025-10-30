@@ -23,84 +23,121 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:paddingTop="16dp"
-	android:paddingBottom="64dp">
+	android:paddingBottom="64dp"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 	<TextView
 		android:id="@+id/product_separator"
 		android:text="@string/product"
 		style="?android:attr/listSeparatorTextViewStyle"
 		/>
-	<EditText
-		android:id="@+id/product_entry"
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/product_entry_layout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/product_separator"
-		android:singleLine="true"
-		android:inputType="textCapWords"
-		android:imeOptions="actionNext"
 		android:hint="@string/product"
-		android:autofillHints="name"
-		android:drawableStart="@drawable/ic_shopping_cart_black_24dp"
-		/>
-	<AutoCompleteTextView
-		android:id="@+id/place_entry_autocomplete"
+		app:startIconDrawable="@drawable/ic_shopping_cart_black_24dp">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/product_entry"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:autofillHints="name"
+			android:imeOptions="actionNext"
+			android:inputType="textCapWords"
+			android:singleLine="true" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/place_entry_layout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/product_entry"
-		android:singleLine="true"
-		android:inputType="text|textVisiblePassword"
-		android:imeOptions="actionNext"
+		android:layout_below="@id/product_entry_layout"
 		android:hint="@string/place"
-		android:drawableStart="@drawable/ic_store_black_24dp"
-		/>
-	<EditText
-		android:id="@+id/price_per_weight_entry"
+		app:startIconDrawable="@drawable/ic_store_black_24dp">
+
+		<AutoCompleteTextView
+			android:id="@+id/place_entry_autocomplete"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:inputType="text"
+			android:singleLine="true"
+			android:imeOptions="actionNext"
+			android:hint="@string/place"/>
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/price_per_weight_entry_layout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/place_entry_autocomplete"
-		android:inputType="numberDecimal"
-		android:imeOptions="actionDone"
-		android:drawableStart="@drawable/ic_attach_money_black_24dp"
-		android:autofillHints="price"
-		/>
-	<EditText
-		android:id="@+id/url_entry"
+		android:layout_below="@id/place_entry_layout"
+		android:hint="@string/price_per_pound_hint"
+		app:startIconDrawable="@drawable/ic_attach_money_black_24dp">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/price_per_weight_entry"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:inputType="numberDecimal"
+			android:imeOptions="actionDone"
+			android:autofillHints="price" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/url_entry_layout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/price_per_weight_entry"
-		android:inputType="textUri"
-		android:imeOptions="actionDone"
-		android:hint="@string/http"
-		android:drawableStart="@drawable/ic_http_black_24dp"
-		android:autofillHints="url"
-		/>
-	<Button
+		android:layout_below="@id/price_per_weight_entry_layout"
+		app:startIconDrawable="@drawable/ic_http_black_24dp">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/url_entry"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:autofillHints="url"
+			android:hint="@string/url"
+			android:imeOptions="actionDone"
+			android:inputType="textUri" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/delete_button"
+		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/url_entry"
+		android:layout_below="@id/url_entry_layout"
 		android:layout_alignParentStart="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/delete"
-		android:drawableStart="@drawable/ic_delete_black_24dp"
+		app:icon="@drawable/ic_delete_black_24dp"
 		/>
-	<Button
+
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/done_button"
+		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/url_entry"
+		android:layout_below="@id/url_entry_layout"
 		android:layout_alignParentEnd="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/save"
-		android:drawableStart="@drawable/ic_done_black_24dp"
+		app:icon="@drawable/ic_done_black_24dp"
 		/>
-	<Button
+
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/history_button"
+		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/done_button"
 		android:layout_alignParentEnd="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/history"
-		android:drawableStart="@drawable/ic_history_black_24dp"
+		app:icon="@drawable/ic_history_black_24dp"
 		/>
 </RelativeLayout>
