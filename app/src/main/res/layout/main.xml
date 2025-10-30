@@ -80,6 +80,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_below="@id/compare_separator"
 		android:hint="@string/price"
+		android:labelFor="@id/price_entry"
 		app:startIconDrawable="@drawable/ic_attach_money_black_24dp">
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -98,6 +99,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_below="@id/price_entry_layout"
 		android:hint="@string/ounces"
+		android:labelFor="@id/weight_entry"
 		app:startIconDrawable="@drawable/weight">
 
 		<com.google.android.material.textfield.TextInputEditText

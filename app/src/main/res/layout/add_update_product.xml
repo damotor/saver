@@ -18,24 +18,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:paddingTop="16dp"
 	android:paddingBottom="64dp"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	android:paddingStart="16dp"
+	android:paddingEnd="16dp">
+
 	<TextView
 		android:id="@+id/product_separator"
-		android:text="@string/product"
 		style="?android:attr/listSeparatorTextViewStyle"
-		/>
+		android:text="@string/product" />
+
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/product_entry_layout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/product_separator"
 		android:hint="@string/product"
+		android:labelFor="@id/product_entry"
 		app:startIconDrawable="@drawable/ic_shopping_cart_black_24dp">
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -46,7 +49,6 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:imeOptions="actionNext"
 			android:inputType="textCapWords"
 			android:minHeight="48dp"
-			android:hint="@string/product"
 			android:singleLine="true" />
 
 	</com.google.android.material.textfield.TextInputLayout>
@@ -58,17 +60,17 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_below="@id/product_entry_layout"
 		android:hint="@string/place"
+		android:labelFor="@id/place_entry_autocomplete"
 		app:startIconDrawable="@drawable/ic_store_black_24dp">
 
 		<AutoCompleteTextView
 			android:id="@+id/place_entry_autocomplete"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:inputType="text"
-			android:singleLine="true"
 			android:imeOptions="actionNext"
+			android:inputType="text"
 			android:minHeight="48dp"
-			android:hint="@string/place"/>
+			android:singleLine="true" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -78,17 +80,17 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_below="@id/place_entry_layout"
 		android:hint="@string/price_per_pound_hint"
+		android:labelFor="@id/price_per_weight_entry"
 		app:startIconDrawable="@drawable/ic_attach_money_black_24dp">
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/price_per_weight_entry"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:inputType="numberDecimal"
+			android:autofillHints="price"
 			android:imeOptions="actionDone"
-			android:minHeight="48dp"
-			android:hint="@string/price_per_pound_hint"
-			android:autofillHints="price" />
+			android:inputType="numberDecimal"
+			android:minHeight="48dp" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -97,6 +99,8 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/price_per_weight_entry_layout"
+		android:hint="@string/url"
+		android:labelFor="@id/url_entry"
 		app:startIconDrawable="@drawable/ic_http_black_24dp">
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -104,13 +108,13 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:autofillHints="url"
-			android:hint="@string/url"
 			android:imeOptions="actionDone"
-			android:minHeight="48dp"
-			android:inputType="textUri" />
+			android:inputType="textUri"
+			android:minHeight="48dp" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 
+	<!-- Buttons -->
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/delete_button"
 		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
@@ -120,30 +124,28 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_alignParentStart="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/delete"
-		app:icon="@drawable/ic_delete_black_24dp"
-		/>
+		app:icon="@drawable/ic_delete_black_24dp" />
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/done_button"
-		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+		style="@style/Widget.MaterialComponents.Button.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/url_entry_layout"
 		android:layout_alignParentEnd="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/save"
-		app:icon="@drawable/ic_done_black_24dp"
-		/>
+		app:icon="@drawable/ic_done_black_24dp" />
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/history_button"
-		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+		style="@style/Widget.MaterialComponents.Button.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/done_button"
 		android:layout_alignParentEnd="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/history"
-		app:icon="@drawable/ic_history_black_24dp"
-		/>
+		app:icon="@drawable/ic_history_black_24dp" />
+
 </RelativeLayout>
