@@ -45,6 +45,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -53,7 +58,7 @@ public class SaverActivity extends AppCompatActivity {
 	private Integer productId = null;
 	private WeightUnit weightUnit = null;
 	private boolean isPreviousActivitySettings = false;
-	private dbHelper db;
+	private DbHelper db;
 
 	private final ActivityResultLauncher<Intent> addProductLauncher = registerForActivityResult(
 			new ActivityResultContracts.StartActivityForResult(),
@@ -138,7 +143,7 @@ public class SaverActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		db = new dbHelper(this);
+		db = new DbHelper(this);
 
 		// load preferences
 		loadPreferences();
@@ -147,7 +152,7 @@ public class SaverActivity extends AppCompatActivity {
 		final EditText weight = findViewById(R.id.weight_entry);
 		weight.setOnEditorActionListener(
 				(v, actionId, event) -> {
-					if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
 						calculatePricePerWeight();
 						return true;
 					}
@@ -169,7 +174,9 @@ public class SaverActivity extends AppCompatActivity {
 		// focus on price and show keyboard at the beginning
 		price.postDelayed(() -> {
 			InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			keyboard.showSoftInput(price, 0);
+			if (keyboard != null) {
+				keyboard.showSoftInput(price, 0);
+			}
 		}, 200);
 
 		// listen for the calculate button
@@ -181,6 +188,23 @@ public class SaverActivity extends AppCompatActivity {
 		textViewProductsNames.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
 			productId = ((Product) arg0.getItemAtPosition(arg2)).getId();
 			setProductInfoLabel(productId);
+		});
+
+		// Barcode Search logic
+		TextInputLayout productSearchLayout = findViewById(R.id.autocomplete_product_layout);
+		productSearchLayout.setEndIconOnClickListener(v -> {
+			GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
+					.enableAutoZoom()
+					.build();
+			GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this, options);
+			scanner.startScan()
+					.addOnSuccessListener(barcode -> {
+						String rawValue = barcode.getRawValue();
+						if (rawValue != null) {
+							searchProductByBarcode(rawValue);
+						}
+					})
+					.addOnFailureListener(e -> Toast.makeText(this, "Scan failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 		});
 
 		// listen for the clear all button
@@ -225,21 +249,15 @@ public class SaverActivity extends AppCompatActivity {
 		importButton.setOnClickListener(v -> {
 			Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 			intent.addCategory(Intent.CATEGORY_OPENABLE);
-			// You can specify the MIME type to filter files.
-			// SQLite databases don't have a standard one, so we use a generic one.
 			intent.setType("application/octet-stream");
-
 			importDbLauncher.launch(intent);
 		});
 
 		// text change listeners
-		// for the calculate button
 		TextWatcher priceWeightTextWatcher = getTextWatcher(calculateButton, price, weight);
-
 		price.addTextChangedListener(priceWeightTextWatcher);
 		weight.addTextChangedListener(priceWeightTextWatcher);
 
-		// for the update product button
 		final TextView productInformationLabel = findViewById(R.id.product_information_label);
 		final TextWatcher pricePerWeightTextWatcher = getTextWatcher(productInformationLabel, updateProductButton);
 		productInformationLabel.addTextChangedListener(pricePerWeightTextWatcher);
@@ -248,34 +266,39 @@ public class SaverActivity extends AppCompatActivity {
 		textViewProductsNames.setOnLongClickListener(v -> {
 			textViewProductsNames.setText("");
 			productInformationLabel.setText(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram : R.string.price_per_pound);
-
 			return true;
 		});
 
 		// make sure we can click links
 		productInformationLabel.setMovementMethod(LinkMovementMethod.getInstance());
+	}
 
-
+	private void searchProductByBarcode(String barcode) {
+		try (Cursor results = db.getProductByBarcode(barcode)) {
+			if (results.moveToFirst()) {
+				productId = results.getInt(0);
+				String productName = results.getString(1);
+				AutoCompleteTextView textViewProductsNames = findViewById(R.id.autocomplete_product);
+				textViewProductsNames.setText(productName);
+				setProductInfoLabel(productId);
+			} else {
+				Toast.makeText(this, "Product not found", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 	@NonNull
 	private TextWatcher getTextWatcher(TextView productInformationLabel, Button updateProductButton) {
 		final TextWatcher pricePerWeightTextWatcher = new TextWatcher() {
-			public void afterTextChanged(Editable arg0) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
+			public void afterTextChanged(Editable arg0) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				String pricePerWeightString = productInformationLabel.getText().toString();
 				String pricePerKilogram = getResources().getString(R.string.price_per_kilogram);
-				String pricePerPound = getResources().getString( R.string.price_per_pound);
-
+				String pricePerPound = getResources().getString(R.string.price_per_pound);
 				updateProductButton.setEnabled(!pricePerWeightString.equals(pricePerKilogram) && !pricePerWeightString.equals(pricePerPound));
 			}
 		};
-		// initialize the enable state
 		pricePerWeightTextWatcher.onTextChanged("", 0, 0, 0);
 		return pricePerWeightTextWatcher;
 	}
@@ -283,18 +306,13 @@ public class SaverActivity extends AppCompatActivity {
 	@NonNull
 	private static TextWatcher getTextWatcher(Button calculateButton, EditText price, EditText weight) {
 		TextWatcher priceWeightTextWatcher = new TextWatcher() {
-			public void afterTextChanged(Editable arg0) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
+			public void afterTextChanged(Editable arg0) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				calculateButton.setEnabled(((price.getText() != null) && (!price.getText().toString().isEmpty())) &&
 						((weight.getText() != null) && (!weight.getText().toString().isEmpty())));
 			}
 		};
-		// initialize the enable state
 		priceWeightTextWatcher.onTextChanged("", 0, 0, 0);
 		return priceWeightTextWatcher;
 	}
@@ -302,14 +320,13 @@ public class SaverActivity extends AppCompatActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		if (isPreviousActivitySettings) {
 			loadPreferences();
 		}
 		isPreviousActivitySettings = false;
 	}
 
-	// show the settings activity
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			isPreviousActivitySettings = true;
@@ -324,25 +341,17 @@ public class SaverActivity extends AppCompatActivity {
 		SharedPreferences sharedPreferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
 		String weightUnitString = sharedPreferences.getString("weightUnit", null);
 		if (weightUnitString != null) {
-			// already saved weightUnit preference
-			if (weightUnitString.equals(WeightUnit.KILOGRAMS.toString())) {
-				weightUnit = WeightUnit.KILOGRAMS;
-			} else {
-				weightUnit = WeightUnit.POUNDS;
-			}
+			weightUnit = WeightUnit.fromName(weightUnitString);
 		} else {
 			weightUnit = WeightUnit.KILOGRAMS;
 			String countryCode = Locale.getDefault().getCountry();
-			// USA, Liberia, Burma
 			if (countryCode.equals("US") || countryCode.equals("LR") || countryCode.equals("MM")) {
 				weightUnit = WeightUnit.POUNDS;
 			}
-			// saved weightUnit preference
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putString("weightUnit", weightUnit.toString());
 			editor.apply();
 		}
-
 		clearFields();
 	}
 
@@ -352,21 +361,21 @@ public class SaverActivity extends AppCompatActivity {
 		try {
 			price = Float.parseFloat(((EditText) findViewById(R.id.price_entry)).getText().toString());
 			weight = Float.parseFloat(((EditText) findViewById(R.id.weight_entry)).getText().toString());
-		}catch(Exception e){
+		} catch (Exception e) {
 			price = 0;
 			weight = 0;
 		}
 		TextView pricePerWeight = findViewById(R.id.price_per_weight_label);
 		DecimalFormat df = new DecimalFormat("####.##");
 		if (weightUnit == WeightUnit.POUNDS) {
-			Float result = (price / weight) * 16;
+			float result = (price / weight) * 16;
 			if (Float.isNaN(result)) {
 				result = 0f;
 			}
 			String pricePerWeightText = getResources().getString(R.string.price_per_pound) + df.format(result).replace(",", ".");
 			pricePerWeight.setText(pricePerWeightText);
 		} else {
-			Float result = (price / weight) * 1000;
+			float result = (price / weight) * 1000;
 			if (Float.isNaN(result)) {
 				result = 0f;
 			}
@@ -377,35 +386,29 @@ public class SaverActivity extends AppCompatActivity {
 
 	private void setProductInfoLabel(int productId) {
 		final TextView productInformationLabel = findViewById(R.id.product_information_label);
-		final dbHelper helper = new dbHelper(this);
-		Cursor results = helper.getProduct(productId);
-		results.moveToFirst();
-		if (!results.isAfterLast()) {
-			String pricePerString = getResources().getString(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram : R.string.price_per_pound);
-			String pricePer = results.getString(2);
-			String place = results.getString(3);
-			String url = results.getString(4);
-			if ((url != null) && (!url.isEmpty())) {
-				place = "<a href=\""+url+"\">"+place+"</a>";
+		try (DbHelper helper = new DbHelper(this);
+			 Cursor results = helper.getProduct(productId)) {
+			if (results.moveToFirst()) {
+				String pricePerString = getResources().getString(weightUnit == WeightUnit.KILOGRAMS ? R.string.price_per_kilogram : R.string.price_per_pound);
+				String pricePer = results.getString(2);
+				String place = results.getString(3);
+				String url = results.getString(4);
+				if ((url != null) && (!url.isEmpty())) {
+					place = "<a href=\"" + url + "\">" + place + "</a>";
+				}
+				productInformationLabel.setText(Html.fromHtml(pricePerString + pricePer + " @ " + place, Html.FROM_HTML_MODE_LEGACY));
 			}
-			productInformationLabel.setText(Html.fromHtml(pricePerString + pricePer + " @ " + place, Html.FROM_HTML_MODE_LEGACY));
 		}
-		results.close();
-		helper.close();
 	}
 
 	private AutoCompleteTextView refreshProducts() {
 		ArrayList<Product> products = new ArrayList<>();
-		final dbHelper helper = new dbHelper(this);
-		Cursor results = helper.getProductNames();
-
-		results.moveToFirst();
-		while (!results.isAfterLast()) {
-			products.add(Product.fromCursor(results));
-			results.moveToNext();
+		try (DbHelper helper = new DbHelper(this);
+			 Cursor results = helper.getProductNames()) {
+			while (results.moveToNext()) {
+				products.add(Product.fromCursor(results));
+			}
 		}
-		results.close();
-		helper.close();
 
 		ArrayAdapter<Product> adapter = new ArrayAdapter<>(this, R.layout.simple_drop_down, products);
 		final AutoCompleteTextView textViewProductsNames = findViewById(R.id.autocomplete_product);

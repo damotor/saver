@@ -20,11 +20,11 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 package com.saver.saver;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public enum WeightUnit {
 	KILOGRAMS("kilograms"),
-	POUNDS("pounds")
-	;
+	POUNDS("pounds");
 
 	private final String name;
 
@@ -32,8 +32,9 @@ public enum WeightUnit {
 		this.name = name;
 	}
 
-	public static WeightUnit fromName(String name) {
-		if (name.equals(KILOGRAMS.toString())) {
+	@NonNull
+	public static WeightUnit fromName(@Nullable String name) {
+		if (KILOGRAMS.name.equals(name)) {
 			return KILOGRAMS;
 		} else {
 			return POUNDS;

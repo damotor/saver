@@ -20,7 +20,7 @@
     <string name="pounds">Libras</string>
     <string name="grams">Gramos</string>
     <string name="kilograms">Kilos</string>
-    <string name="database_path">Ruta de la base de datos</string>
+    <string name="database_path">Ruta de la datos</string>
     <string name="http">http://</string>
     <string name="delete">Borrar</string>
     <string name="delete_confirmation">¿Seguro que quieres borrar este producto?</string>
@@ -35,4 +35,6 @@
     <string name="product_name">Nombre del Producto</string>
     <string name="weight">Peso</string>
     <string name="url">URL</string>
+    <string name="barcode">Código de barras</string>
+    <string name="scan">Escanear</string>
 </resources>

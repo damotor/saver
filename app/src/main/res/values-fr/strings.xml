@@ -35,4 +35,6 @@
     <string name="export_db">Exporter DB</string>
     <string name="weight">Poids</string>
     <string name="url">URL</string>
+    <string name="barcode">Code à barres</string>
+    <string name="scan">Scanner</string>
 </resources>

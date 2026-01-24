@@ -19,45 +19,43 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.saver.saver;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class SettingsActivity extends Activity {
-	// Called when the activity is first created.
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SettingsActivity extends AppCompatActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings);
 
-		// listen for kilograms radio button
-		final Button kilogramsButton = findViewById(R.id.kilograms_radio);
-		kilogramsButton.setOnClickListener(v -> saveWeightUnitPreference(WeightUnit.KILOGRAMS));
+		final RadioGroup weightUnitGroup = findViewById(R.id.weight_unit_group);
 
-		// listen for pounds radio button
-		final Button poundsButton = findViewById(R.id.pounds_radio);
-		poundsButton.setOnClickListener(v -> saveWeightUnitPreference(WeightUnit.POUNDS));
-
-		// enable/disable radios according to the preferences
 		SharedPreferences sharedPreferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
-		String weightUnit = sharedPreferences.getString("weightUnit", null);
-		if (weightUnit != null) {
-			final RadioGroup weightUnitGroup = findViewById(R.id.weight_unit_group);
-			if (weightUnit.equals(WeightUnit.KILOGRAMS.toString())) {
+		String savedWeightUnit = sharedPreferences.getString("weightUnit", null);
+		if (savedWeightUnit != null) {
+			if (savedWeightUnit.equals(WeightUnit.KILOGRAMS.toString())) {
 				weightUnitGroup.check(R.id.kilograms_radio);
-			} else {
+			} else if (savedWeightUnit.equals(WeightUnit.POUNDS.toString())) {
 				weightUnitGroup.check(R.id.pounds_radio);
 			}
 		}
 
-		// set database path
-		final dbHelper helper = new dbHelper(this);
-		TextView pricePerWeight = findViewById(R.id.database_path);
-		pricePerWeight.setText(helper.getDatabasePath());
-		helper.close();
+		weightUnitGroup.setOnCheckedChangeListener((group, checkedId) -> {
+			if (checkedId == R.id.kilograms_radio) {
+				saveWeightUnitPreference(WeightUnit.KILOGRAMS);
+			} else if (checkedId == R.id.pounds_radio) {
+				saveWeightUnitPreference(WeightUnit.POUNDS);
+			}
+		});
+
+		try (DbHelper helper = new DbHelper(this)) {
+			TextView databasePathView = findViewById(R.id.database_path);
+			databasePathView.setText(helper.getDatabasePath());
+		}
 	}
 
 	private void saveWeightUnitPreference(WeightUnit weightUnit) {

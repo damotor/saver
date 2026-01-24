@@ -36,31 +36,24 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-public class dbHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
 	public static final String DBNAME = "products.db";
 	public static final int VERSION = 2;
-	SQLiteDatabase database;
+	private SQLiteDatabase database;
 
-	public dbHelper(Context context) {
-		// This is the standard, correct way to use SQLiteOpenHelper.
-		// It will automatically create the database in the app's private internal storage.
-		// Path: /data/data/com.saver.saver/databases/products.db
+	public DbHelper(Context context) {
 		super(context, DBNAME, null, VERSION);
-
 		try {
-			// Get a writable database. This single call handles creation, opening, and upgrades.
 			database = this.getWritableDatabase();
 		} catch (Exception e) {
-			Log.e("dbHelper", "Failed to get writable database.", e);
-			// As a last resort, try to get a readable one.
+			Log.e("DbHelper", "Failed to get writable database.", e);
 			database = this.getReadableDatabase();
 		}
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// This method is called automatically by getWritableDatabase() only if the database doesn't exist.
-		Log.d("dbHelper", "onCreate called, creating tables.");
+		Log.d("DbHelper", "onCreate called, creating tables.");
 		db.execSQL("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price_per_weight NUMERIC NOT NULL, place TEXT NOT NULL, url TEXT, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, barcode TEXT);");
 		db.execSQL("CREATE TABLE IF NOT EXISTS product_revisions (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price_per_weight NUMERIC NOT NULL, place TEXT NOT NULL, url TEXT, original_created_at DATETIME NOT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, barcode TEXT);");
 	}
@@ -109,43 +102,39 @@ public class dbHelper extends SQLiteOpenHelper {
 	}
 
 	public Integer updateProduct(int id, String name, float pricePerWeight, String place, String url, String barcode) {
-		Cursor results = getProduct(id);
-		results.moveToFirst();
-		if (!results.isAfterLast()) {
-			String oldName = results.getString(1);
-			float oldPricePerWeight = results.getFloat(2);
-			String oldPlace = results.getString(3);
-			String oldUrl = results.getString(4);
-			String oldCreatedAt = results.getString(5);
-			String oldBarcode = results.getString(6);
+		try (Cursor results = getProduct(id)) {
+			if (results.moveToFirst()) {
+				String oldName = results.getString(1);
+				float oldPricePerWeight = results.getFloat(2);
+				String oldPlace = results.getString(3);
+				String oldUrl = results.getString(4);
+				String oldCreatedAt = results.getString(5);
+				String oldBarcode = results.getString(6);
 
-			addProductRevision(oldName, oldPricePerWeight, oldPlace, oldUrl, oldCreatedAt, oldBarcode);
+				addProductRevision(oldName, oldPricePerWeight, oldPlace, oldUrl, oldCreatedAt, oldBarcode);
+			}
 		}
-		results.close();
 
 		deleteProduct(id);
 
 		return addProduct(name, pricePerWeight, place, url, barcode);
 	}
 
-	public String getDatabasePath() {
-		return database.getPath();
-	}
-
-	public void close() {
+	@Override
+	public synchronized void close() {
+		super.close();
 		if (database != null && database.isOpen()) {
 			database.close();
 		}
 	}
 
 	private Integer getMaxProductId() {
-		Cursor results = database.rawQuery("SELECT id FROM products ORDER BY id DESC LIMIT 1", null);
-		if (!results.moveToFirst()) {
-			return 0; // Return a default value if no products exist
+		try (Cursor results = database.rawQuery("SELECT id FROM products ORDER BY id DESC LIMIT 1", null)) {
+			if (!results.moveToFirst()) {
+				return 0;
+			}
+			return results.getInt(0);
 		}
-		Integer maxId = results.getInt(0);
-		results.close();
-		return maxId;
 	}
 
 	public void addProductRevision(String name, float pricePerWeight, String place, String url, String original_created_at, String barcode) {
@@ -164,32 +153,30 @@ public class dbHelper extends SQLiteOpenHelper {
 	}
 
 	public void deleteProductButBackup(int id) {
-		Cursor results = getProduct(id);
-		results.moveToFirst();
-		if (!results.isAfterLast()) {
-			String oldName = results.getString(1);
-			float oldPricePerWeight = results.getFloat(2);
-			String oldPlace = results.getString(3);
-			String oldUrl = results.getString(4);
-			String oldCreatedAt = results.getString(5);
-			String oldBarcode = results.getString(6);
+		try (Cursor results = getProduct(id)) {
+			if (results.moveToFirst()) {
+				String oldName = results.getString(1);
+				float oldPricePerWeight = results.getFloat(2);
+				String oldPlace = results.getString(3);
+				String oldUrl = results.getString(4);
+				String oldCreatedAt = results.getString(5);
+				String oldBarcode = results.getString(6);
 
-			addProductRevision(oldName, oldPricePerWeight, oldPlace, oldUrl, oldCreatedAt, oldBarcode);
+				addProductRevision(oldName, oldPricePerWeight, oldPlace, oldUrl, oldCreatedAt, oldBarcode);
+			}
 		}
-		results.close();
-
 		deleteProduct(id);
 	}
 
 	public boolean exportDatabase(Context context) {
 		if (!database.isOpen()) {
-			Log.e("dbHelper", "Export failed: Database is not open.");
+			Log.e("DbHelper", "Export failed: Database is not open.");
 			return false;
 		}
 
 		File privateDbFile = new File(database.getPath());
 		if (!privateDbFile.exists()) {
-			Log.e("dbHelper", "Export failed: Private database file does not exist.");
+			Log.e("DbHelper", "Export failed: Private database file does not exist.");
 			return false;
 		}
 
@@ -203,14 +190,14 @@ public class dbHelper extends SQLiteOpenHelper {
 		Uri newFileUri = resolver.insert(collection, contentValues);
 
 		if (newFileUri == null) {
-			Log.e("dbHelper", "Export failed: Could not create MediaStore entry.");
+			Log.e("DbHelper", "Export failed: Could not create MediaStore entry.");
 			return false;
 		}
 
 		try (InputStream in = Files.newInputStream(privateDbFile.toPath());
 			 OutputStream out = resolver.openOutputStream(newFileUri)) {
 			if (out == null) {
-				Log.e("dbHelper", "Export failed: Could not open output stream for URI.");
+				Log.e("DbHelper", "Export failed: Could not open output stream for URI.");
 				return false;
 			}
 			byte[] buf = new byte[1024];
@@ -218,24 +205,24 @@ public class dbHelper extends SQLiteOpenHelper {
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
-			Log.i("dbHelper", "Database exported successfully to " + newFileUri);
+			Log.i("DbHelper", "Database exported successfully to " + newFileUri);
 			return true;
 		} catch (Exception e) {
-			Log.e("dbHelper", "Export failed with exception.", e);
+			Log.e("DbHelper", "Export failed with exception.", e);
 			resolver.delete(newFileUri, null, null);
 			return false;
 		}
 	}
 
 	public boolean importDatabase(Context context, Uri sourceUri) {
-		File privateDbFile = new File(context.getDatabasePath(DBNAME).getPath());
+		File privateDbFile = context.getDatabasePath(DBNAME);
 
 		close();
 
 		try (InputStream in = context.getContentResolver().openInputStream(sourceUri);
 			 OutputStream out = new FileOutputStream(privateDbFile, false)) {
 			if (in == null) {
-				Log.e("dbHelper", "Import failed: Could not open input stream from URI.");
+				Log.e("DbHelper", "Import failed: Could not open input stream from URI.");
 				return false;
 			}
 			byte[] buf = new byte[1024];
@@ -243,15 +230,19 @@ public class dbHelper extends SQLiteOpenHelper {
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
-			Log.i("dbHelper", "Database imported successfully from " + sourceUri);
+			Log.i("DbHelper", "Database imported successfully from " + sourceUri);
 
 			database = SQLiteDatabase.openDatabase(privateDbFile.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
 
 			return true;
 		} catch (Exception e) {
-			Log.e("dbHelper", "Import failed with exception.", e);
+			Log.e("DbHelper", "Import failed with exception.", e);
 			database = this.getWritableDatabase();
 			return false;
 		}
+	}
+
+	public String getDatabasePath() {
+		return database.getPath();
 	}
 }

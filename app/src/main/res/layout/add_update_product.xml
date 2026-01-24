@@ -114,13 +114,34 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 
 	</com.google.android.material.textfield.TextInputLayout>
 
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/barcode_entry_layout"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/url_entry_layout"
+		android:hint="@string/barcode"
+		android:labelFor="@id/barcode_entry"
+		app:endIconMode="custom"
+		app:endIconDrawable="@drawable/ic_camera_alt_black_24dp"
+		app:endIconContentDescription="@string/scan">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/barcode_entry"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:imeOptions="actionDone"
+			android:inputType="text"
+			android:minHeight="48dp" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
 	<!-- Buttons -->
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/delete_button"
 		style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/url_entry_layout"
+		android:layout_below="@id/barcode_entry_layout"
 		android:layout_alignParentStart="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/delete"
@@ -131,7 +152,7 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		style="@style/Widget.MaterialComponents.Button.Icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/url_entry_layout"
+		android:layout_below="@id/barcode_entry_layout"
 		android:layout_alignParentEnd="true"
 		android:layout_marginStart="10dip"
 		android:text="@string/save"

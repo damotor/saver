@@ -37,7 +37,10 @@ along with Saver.  If not, see <http://www.gnu.org/licenses/>.
 		android:layout_height="wrap_content"
 		android:layout_below="@id/search_separator"
 		android:hint="@string/search_product"
-		app:startIconDrawable="@drawable/ic_search_black_24dp">
+		app:startIconDrawable="@drawable/ic_search_black_24dp"
+		app:endIconMode="custom"
+		app:endIconDrawable="@drawable/ic_camera_alt_black_24dp"
+		app:endIconContentDescription="@string/scan">
 
 		<AutoCompleteTextView
 			android:id="@+id/autocomplete_product"

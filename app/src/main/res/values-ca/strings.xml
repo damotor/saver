@@ -35,4 +35,6 @@
     <string name="product_name">Nom del Producte</string>
     <string name="weight">Pes</string>
     <string name="url">URL</string>
+    <string name="barcode">Codi de barres</string>
+    <string name="scan">Escanejar</string>
 </resources>

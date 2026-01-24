@@ -35,4 +35,6 @@
     <string name="product_name">Product Name</string>
     <string name="weight">Weight</string>
     <string name="url">URL</string>
+    <string name="barcode">Barcode</string>
+    <string name="scan">Scan</string>
 </resources>
